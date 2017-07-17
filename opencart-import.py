@@ -312,7 +312,7 @@ def db_create_product(category_id: int, product_data: dict, attrs: list):
         product_id,
         OC_LANGUAGE_ID,
         db_connection.converter.escape(product_data['name']),
-        db_connection.converter.escape(product_data['description'] or ''),
+        db_connection.converter.escape(product_data.get('description', '')),
         db_connection.converter.escape(product_data['name']),
     ))
 
@@ -395,7 +395,7 @@ def extract_product_attrs(attr_group_name: str, product_data: Dict[str, str]) ->
 
 
 def process_product(product_data: dict, attr_group_name: str):
-    for req_key in ('sku', 'name', 'manufacturer', 'model', 'description', 'category'):
+    for req_key in ('sku', 'name', 'manufacturer', 'model', 'category'):
         if req_key not in product_data or not product_data[req_key]:
             raise RuntimeError("'{}' is not in product's data or is is empty".format(req_key))
 
