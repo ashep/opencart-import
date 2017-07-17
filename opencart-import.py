@@ -312,7 +312,7 @@ def db_create_product(category_id: int, product_data: dict, attrs: list):
         product_id,
         OC_LANGUAGE_ID,
         db_connection.converter.escape(product_data['name']),
-        db_connection.converter.escape(product_data.get('description', '')),
+        db_connection.converter.escape(product_data.get('description') or ''),
         db_connection.converter.escape(product_data['name']),
     ))
 
@@ -351,7 +351,7 @@ def db_update_product(product_data: dict, attrs: list):
     db_execute('UPDATE product_description SET name="{}", description="{}", meta_title="{}" '
                'WHERE product_id={}'.format(
         db_connection.converter.escape(product_data['name']),
-        db_connection.converter.escape(product_data['description']),
+        db_connection.converter.escape(product_data.get('description') or ''),
         db_connection.converter.escape(product_data['name']),
         product_id,
     ))
