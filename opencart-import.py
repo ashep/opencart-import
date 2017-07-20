@@ -106,7 +106,7 @@ def excel_get_data_names(sheet: Worksheet) -> List[str]:
     if sheet.max_row < EXCEL_DATA_NAMES_ROW:
         raise RuntimeWarning("WARNING: sheet '{}' contains too little data".format(sheet.title))
 
-    for col_i in range(1, sheet.max_column):
+    for col_i in range(1, sheet.max_column + 1):
         cell_value = sheet.cell(row=EXCEL_DATA_NAMES_ROW, column=col_i).value
         if cell_value:
             r.append(cell_value)
