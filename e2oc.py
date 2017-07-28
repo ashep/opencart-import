@@ -10,6 +10,7 @@ from openpyxl.worksheet.worksheet import Worksheet
 __author__ = 'Alexander Shepetko'
 __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
+__version__ = '0.1'
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -266,6 +267,7 @@ def db_create_product(category_id: int, product_data: dict, attrs: list):
         raise RuntimeError("Manufacturer '{}' is not found".format(product_data['manufacturer']))
 
     # Insert product
+    price = float(product_data['price']) if product_data['price'] else 0.0
     c = db_execute('INSERT INTO product ' \
                    '(model, sku, quantity, stock_status_id, manufacturer_id, shipping, date_available, price, weight_class_id, ' \
                    'length_class_id, subtract, minimum, sort_order, status, date_added, date_modified)' \
@@ -276,14 +278,14 @@ def db_create_product(category_id: int, product_data: dict, attrs: list):
         OC_STOCK_STATUS_ID,
         manufacturer_id,
         OC_PRODUCT_SHIPPING,
-        now,
-        float(product_data['price']) if product_data['price'] else 0.0,  # Price
+        now,  # Date available
+        price,  # Price
         OC_WEIGHT_CLASS_ID,
         OC_LENGTH_CLASS_ID,
         OC_PRODUCT_SUBTRACT,
         OC_PRODUCT_MINIMUM,
         1,  # Sort order
-        1,  # Status
+        1 if price else 0,  # Status
         now,  # Date added
         now,  # Date modified
     ))
@@ -333,13 +335,17 @@ def db_update_product(product_data: dict, attrs: list):
     if not manufacturer_id:
         raise RuntimeError("Manufacturer '{}' is not found".format(product_data['manufacturer']))
 
+    # Price
+    price = float(product_data['price']) if product_data['price'] else 0.0
+
     # Update general info
-    db_execute('UPDATE product SET model="{}", manufacturer_id={}, price={}, date_modified="{}" '
+    db_execute('UPDATE product SET model="{}", manufacturer_id={}, price={}, date_modified="{}", status={} '
                'WHERE product_id={}'.format(
         db_connection.converter.escape(product_data['model']),
         manufacturer_id,
-        float(product_data['price']) if product_data['price'] else 0.0,  # Price
-        datetime.now().strftime('%Y-%m-%d %H:%M'),
+        price,
+        datetime.now().strftime('%Y-%m-%d %H:%M'),  # Date modified
+        1 if price else 0,  # Status
         product_id,
     ))
 
