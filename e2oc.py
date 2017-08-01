@@ -406,6 +406,9 @@ def process_product(product_data: dict, attr_group_name: str):
             raise RuntimeError("'{}' is not in product's data or is is empty".format(req_key))
 
     category_id = db_resolve_category_id(product_data['category'])
+    if not category_id:
+        raise RuntimeError("Category '{}' is not found".format(product_data['category']))
+
     product_attrs = extract_product_attrs(attr_group_name, product_data)
 
     if db_is_product_exists(product_data['sku']):
