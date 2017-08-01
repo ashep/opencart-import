@@ -430,7 +430,8 @@ def main():
             try:
                 process_product(product_data, sheet_title)
                 row_i += 1
-            except RuntimeError as e:
+            except Exception as e:
+                print('Product data was: {}'.format(product_data))
                 raise RuntimeError("Sheet '{}', row {}: {}".format(sheet_title, row_i + EXCEL_DATA_START_ROW, e))
 
 
