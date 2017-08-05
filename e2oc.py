@@ -126,7 +126,7 @@ def excel_load_sheet(sheet: Worksheet) -> List[Dict]:
     data_names = excel_get_data_names(sheet)
 
     r = []
-    for row_i in range(EXCEL_DATA_START_ROW, sheet.max_row):
+    for row_i in range(EXCEL_DATA_START_ROW, sheet.max_row + 1):
         row_data = {}
         for col_i in range(1, len(data_names) + 1):
             data_name_i = col_i - 1
